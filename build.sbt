@@ -9,6 +9,7 @@ scalaVersion := "2.11.6"
 enablePlugins(JavaAppPackaging)
 
 resolvers ++= Seq(
+  "RoundEights" at "http://maven.spikemark.net/roundeights",
   "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
@@ -36,6 +37,10 @@ libraryDependencies ++= {
     // logging
     "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
     "ch.qos.logback" % "logback-classic" % "1.1.2",
+
+    // crypto
+    "commons-codec" % "commons-codec" % "1.10",
+    "com.roundeights" %% "hasher" % "1.0.0",
 
     // test
     "org.specs2" %% "specs2-core" % "2.3.11" % "test"

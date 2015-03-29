@@ -4,7 +4,7 @@ import akka.actor.{ActorSystem, Props}
 import akka.io.IO
 import akka.pattern.ask
 import akka.util.Timeout
-import com.chiwanpark.push.actors.ManageActor.CreateTable
+import com.chiwanpark.push.actors.ManageActor.{CreateSuperUser, CreateTable}
 import com.chiwanpark.push.actors.{ManageActor, ServiceActor}
 import spray.can.Http
 
@@ -19,6 +19,8 @@ object Main extends App {
     val service = system.actorOf(Props[ManageActor], "push-manage")
     args(0) match {
       case "initdb" => Await.result(service ? CreateTable, Duration.Inf)
+      case "createsuperuser" if args.length == 3 =>
+        Await.result(service ? CreateSuperUser(args(1), args(2)), Duration.Inf)
       case _ =>
     }
 
