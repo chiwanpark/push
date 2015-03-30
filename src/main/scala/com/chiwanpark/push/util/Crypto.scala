@@ -15,6 +15,8 @@ object Crypto {
     cipher
   }
 
+  def encrypt(data: String, secret: String): Array[Byte] = encrypt(data.getBytes("UTF-8"), secret)
+
   def encrypt(data: Array[Byte], secret: String): Array[Byte] = getCipher(Cipher.ENCRYPT_MODE, secret).doFinal(data)
 
   def decrypt(data: Array[Byte], secret: String): Array[Byte] = getCipher(Cipher.DECRYPT_MODE, secret).doFinal(data)
