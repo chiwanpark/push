@@ -1,7 +1,8 @@
 package com.chiwanpark.push.services
 
 import com.chiwanpark.push.Configuration
-import com.chiwanpark.push.database.{Certificate, CertificateQuery}
+import com.chiwanpark.push.database.CertificateConversion._
+import com.chiwanpark.push.database.{APNSCertificate, Certificate, CertificateQuery}
 import com.chiwanpark.push.util.Crypto
 import com.chiwanpark.push.util.PushJsonProtocol._
 import com.typesafe.scalalogging.Logger
@@ -32,10 +33,10 @@ trait CertificateService extends WebService with DatabaseService {
 
   val postAPNSCertificate = path("apns") {
     post {
-      formFields('name.as[String], 'certificate.as[String], 'password.as[String]) {
-        case (name: String, certificate: String, password: String) =>
-          val value = Map("certificate" -> certificate, "password" -> password).toJson.compactPrint
-          val query = CertificateQuery.insert("apns", name, value)
+      formFields('name.as[String], 'certificate.as[String], 'password.as[String], 'mode.as[String]) {
+        case (name: String, certificate: String, password: String, mode: String) =>
+          val certObj = APNSCertificate(None, name, mode, certificate, password)
+          val query = CertificateQuery.insert(certObj)
 
           onComplete(db.run(query)) {
             case Success(id: Int) =>
