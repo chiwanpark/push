@@ -19,7 +19,7 @@ trait PushService extends WebService with DatabaseService {
   val log = Logger(LoggerFactory.getLogger(classOf[PushService]))
   val pushActor = actorRefFactory.actorOf(Props[PushActor], "push-actor")
 
-  val pushMessageToSingleDevice = path("single") {
+  val pushMessageToSingleDevice = path("to-single-device") {
     post {
       formFields('token.as[String], 'message.as[String], 'badge.as[Int], 'device.as[String]) {
         case (token: String, message: String, badge: Int, device: String) =>
