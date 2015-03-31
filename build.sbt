@@ -34,6 +34,9 @@ libraryDependencies ++= {
     "com.typesafe.slick" %% "slick" % "3.0.0-RC1",
     "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
 
+    // apns
+    "com.notnoop.apns" % "apns" % "1.0.0.Beta6",
+
     // logging
     "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
     "ch.qos.logback" % "logback-classic" % "1.1.2",

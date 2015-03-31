@@ -7,7 +7,7 @@ import com.chiwanpark.push.util.Crypto
 import com.chiwanpark.push.util.PushJsonProtocol._
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
-import spray.http.HttpResponse
+import spray.http.{MultipartFormData, HttpResponse}
 import spray.json._
 
 import scala.util.{Failure, Success}
@@ -33,9 +33,10 @@ trait CertificateService extends WebService with DatabaseService {
 
   val postAPNSCertificate = path("apns") {
     post {
-      formFields('name.as[String], 'certificate.as[String], 'password.as[String], 'mode.as[String]) {
-        case (name: String, certificate: String, password: String, mode: String) =>
-          val certObj = APNSCertificate(None, name, mode, certificate, password)
+      formFields('name.as[String], 'certificate.as[Array[Byte]], 'password.as[String], 'mode.as[String]) {
+        case (name: String, certificate: Array[Byte], password: String, mode: String) =>
+          val encodedCert = Crypto.encodeBase64(certificate)
+          val certObj = APNSCertificate(None, name, mode, encodedCert, password)
           val query = CertificateQuery.insert(certObj)
 
           onComplete(db.run(query)) {
