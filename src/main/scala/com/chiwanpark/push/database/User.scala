@@ -7,7 +7,7 @@ import slick.lifted.Tag
 
 case class User(id: Option[Int] = None, username: String, password: String)
 
-class UserTable(tag: Tag) extends Table[User](tag, "users") {
+class UserTable(tag: Tag) extends Table[User](tag, "push_users") {
   def id = column[Int]("USER_ID", O.PrimaryKey, O.AutoInc)
   def username = column[String]("USERNAME")
   def password = column[String]("USER_PASSWORD")

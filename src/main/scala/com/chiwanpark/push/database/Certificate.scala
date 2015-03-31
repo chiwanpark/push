@@ -24,7 +24,7 @@ object CertificateConversion {
   }
 }
 
-class CertificateTable(tag: Tag) extends Table[Certificate](tag, "certificates") {
+class CertificateTable(tag: Tag) extends Table[Certificate](tag, "push_certificates") {
   def id = column[Int]("CERTIFICATE_ID", O.PrimaryKey, O.AutoInc)
   def certType = column[String]("CERTIFICATE_TYPE")
   def name = column[String]("NAME")
