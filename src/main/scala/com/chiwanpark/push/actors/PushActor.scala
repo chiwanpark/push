@@ -31,7 +31,7 @@ object PushActor {
 
   case class SendPushToAppleDevice(certificate: APNSCertificate, message: String, badge: Int, deviceToken: String)
 
-  case class SendPushToAppleDevices(certificate: APNSCertificate, messages: String, badge: Int,
+  case class SendPushToAppleDevices(certificate: APNSCertificate, message: String, badge: Int,
                                     deviceTokens: Array[String])
 
 }
