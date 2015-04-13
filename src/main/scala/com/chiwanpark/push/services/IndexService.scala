@@ -17,7 +17,9 @@
 package com.chiwanpark.push.services
 
 trait IndexService extends WebService {
-  val indexRoute = path("") {
+  def getIndex = path("") {
     getFromResource("pages/index.html")
   }
+
+  val indexRoute = getIndex
 }

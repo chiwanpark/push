@@ -21,6 +21,8 @@ import slick.driver.PostgresDriver.api._
 import slick.lifted.Tag
 import spray.json._
 
+import scala.language.implicitConversions
+
 case class Certificate(id: Option[Int] = None, certType: String, name: String, value: String)
 
 case class APNSCertificate(id: Option[Int] = None, name: String, mode: String, certificate: String, password: String)

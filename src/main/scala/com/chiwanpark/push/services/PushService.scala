@@ -19,7 +19,7 @@ package com.chiwanpark.push.services
 import akka.actor.Props
 import com.chiwanpark.push.Configuration
 import com.chiwanpark.push.actors.PushActor
-import com.chiwanpark.push.actors.PushActor.{SendPushToAppleDevices, SendPushToAppleDevice}
+import com.chiwanpark.push.actors.PushActor.{SendPushToAppleDevice, SendPushToAppleDevices}
 import com.chiwanpark.push.database.CertificateConversion._
 import com.chiwanpark.push.database.{Certificate, CertificateQuery}
 import com.chiwanpark.push.util.Crypto
@@ -32,8 +32,8 @@ import spray.json._
 import scala.util.{Failure, Success}
 
 trait PushService extends WebService with DatabaseService {
-  val log = Logger(LoggerFactory.getLogger(classOf[PushService]))
-  val pushActor = actorRefFactory.actorOf(Props[PushActor], "push-actor")
+  private val log = Logger(LoggerFactory.getLogger(classOf[PushService]))
+  private val pushActor = actorRefFactory.actorOf(Props[PushActor], "push-actor")
 
   def certificateQueryFromToken(token: String) = {
     val decodedToken = Crypto.decrypt(Crypto.decodeBase64(token), Configuration.SECRET_KEY)
@@ -42,10 +42,10 @@ trait PushService extends WebService with DatabaseService {
     CertificateQuery.selectById(decryptedToken("id"))
   }
 
-  val pushMessageToSingleDevice = path("to-single-device") {
+  def pushMessageToSingleDevice = path("to-single-device") {
     post {
-      formFields('token.as[String], 'message.as[String], 'badge.as[Int], 'device.as[String]) {
-        case (token: String, message: String, badge: Int, device: String) =>
+      formFields('token.as[String], 'message.as[String], 'badge.as[Int] ? 0, 'device.as[String]) {
+        (token, message, badge, device) =>
           val query = certificateQueryFromToken(token)
           val process = db.run(query).map { result: Seq[Certificate] =>
             if (result.length > 0) {
@@ -65,10 +65,10 @@ trait PushService extends WebService with DatabaseService {
     }
   }
 
-  val pushMessageToMultipleDevices = path("to-multiple-devices") {
+  def pushMessageToMultipleDevices = path("to-multiple-devices") {
     post {
-      formFields('token.as[String], 'message.as[String], 'badge.as[Int], 'devices.as[String]) {
-        case (token: String, message: String, badge: Int, devices: String) =>
+      formFields('token.as[String], 'message.as[String], 'badge.as[Int] ? 0, 'devices.as[String]) {
+        (token, message, badge, devices) =>
           val query = certificateQueryFromToken(token)
           val process = db.run(query).map { result: Seq[Certificate] =>
             if (result.length > 0) {
